@@ -339,6 +339,41 @@
             color: #d32f2f;
         }
 
+        .how-to-play {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .how-to-play h3 {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .instruction-item {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .instruction-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .instruction-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
         @media (max-width: 600px) {
             .game-container {
                 padding: 20px;
@@ -402,6 +437,19 @@
                 padding: 8px 14px;
                 font-size: 0.85em;
             }
+
+            .how-to-play h3 {
+                font-size: 1.3em;
+            }
+
+            .instructions {
+                padding: 15px;
+            }
+
+            .instruction-item {
+                font-size: 0.95em;
+                margin-bottom: 12px;
+            }
         }
     </style>
 </head>
@@ -446,19 +494,21 @@
                 return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
             };
 
-            const getValidMoves = (row, col) => {
+            const getValidMoves = (row, col, gridToCheck = null) => {
                 const moves = [];
                 const knightMoves = [
                     [-2, -1], [-2, 1], [-1, -2], [-1, 2],
                     [1, -2], [1, 2], [2, -1], [2, 1]
                 ];
 
+                const checkGrid = gridToCheck || grid;
+
                 for (let [dr, dc] of knightMoves) {
                     const newRow = row + dr;
                     const newCol = col + dc;
                     if (newRow >= 0 && newRow < gridSize && 
                         newCol >= 0 && newCol < gridSize && 
-                        grid[newRow][newCol] === null) {
+                        checkGrid[newRow][newCol] === null) {
                         moves.push([newRow, newCol]);
                     }
                 }
@@ -489,6 +539,14 @@
                     setGameStarted(true);
                     setLastPosition([row, col]);
                     setMoveHistory([{ grid: grid.map(r => [...r]), number: 1, position: null }]);
+                    
+                    // Check if there are any valid moves after first placement
+                    // IMPORTANT: Check against newGrid, not grid (which hasn't updated yet)
+                    const validMoves = getValidMoves(row, col, newGrid);
+                    if (validMoves.length === 0) {
+                        setGameOver(true);
+                        updateHighScore(1);
+                    }
                     return;
                 }
 
@@ -518,7 +576,8 @@
                     }
 
                     // Check if there are any valid moves left
-                    const validMoves = getValidMoves(row, col);
+                    // IMPORTANT: Check against newGrid, not grid (which hasn't updated yet)
+                    const validMoves = getValidMoves(row, col, newGrid);
                     if (validMoves.length === 0) {
                         setGameOver(true);
                         updateHighScore(currentNumber);
@@ -670,6 +729,27 @@
                         <button className="btn btn-primary" onClick={resetGame}>
                             New Game
                         </button>
+                    </div>
+
+                    <div className="how-to-play">
+                        <h3>How to Play</h3>
+                        <div className="instructions">
+                            <div className="instruction-item">
+                                <strong>🎯 Objective:</strong> Fill the entire grid with numbers in sequence (1, 2, 3...) by moving like a knight in chess.
+                            </div>
+                            <div className="instruction-item">
+                                <strong>♞ Knight Move:</strong> Move in an L-shape - 2 squares in one direction, then 1 square perpendicular. Click any square to start with "1", then click valid squares to continue.
+                            </div>
+                            <div className="instruction-item">
+                                <strong>😊 Friendly Mode:</strong> Valid moves are highlighted in green to help you learn the pattern.
+                            </div>
+                            <div className="instruction-item">
+                                <strong>💪 Challenging Mode:</strong> No hints - test your memory and strategy!
+                            </div>
+                            <div className="instruction-item">
+                                <strong>🎲 Grid Sizes:</strong> Start with 3×3 for practice, then try larger grids for a tougher challenge. 3×3 and 4×4 grids are mathematically impossible to complete, you'll always be left with at least one square. 5×5 and larger grids can be fully solved, but it's going to be challenging! Try different starting squares, aim for solving the grid and try to beat your highest score. Good luck!
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
