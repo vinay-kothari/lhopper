@@ -38,6 +38,7 @@
             margin: -40px -40px 30px -40px;
             padding: 30px 40px;
             border-radius: 20px 20px 0 0;
+            position: relative;
         }
 
         .logo {
@@ -88,6 +89,109 @@
             margin: 0;
         }
 
+        .help-button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .help-button-main {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button-main:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+            font-size: 1.8em;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-button:hover {
+            color: #000;
+        }
+
+        .modal-instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .modal-instruction-item {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .modal-instruction-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-instruction-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
         .controls {
             display: flex;
             flex-direction: column;
@@ -102,15 +206,17 @@
         }
 
         .mode-btn {
-            padding: 12px 30px;
+            flex: 1;
+            padding: 12px 20px;
             border: 2px solid #667eea;
             background: white;
             color: #667eea;
             border-radius: 10px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            text-align: center;
         }
 
         .mode-btn:hover {
@@ -121,6 +227,13 @@
         .mode-btn.active {
             background: #667eea;
             color: white;
+        }
+
+        .mode-description {
+            font-size: 0.85em;
+            font-weight: normal;
+            opacity: 0.9;
+            margin-top: 3px;
         }
 
         .grid-selector {
@@ -339,41 +452,6 @@
             color: #d32f2f;
         }
 
-        .how-to-play {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
-
-        .how-to-play h3 {
-            text-align: center;
-            color: #667eea;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-
-        .instructions {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-        }
-
-        .instruction-item {
-            margin-bottom: 15px;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .instruction-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .instruction-item strong {
-            color: #667eea;
-            display: block;
-            margin-bottom: 5px;
-        }
-
         @media (max-width: 600px) {
             .game-container {
                 padding: 20px;
@@ -396,6 +474,20 @@
                 grid-template-columns: 16px 16px;
                 grid-template-rows: 16px 16px;
                 gap: 2px;
+            }
+
+            .help-button-main {
+                padding: 12px 30px;
+                font-size: 1.1em;
+            }
+
+            .mode-btn {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            .mode-description {
+                font-size: 0.75em;
             }
 
             .cell {
@@ -428,25 +520,20 @@
                 font-size: 0.9em;
             }
 
-            .mode-btn {
-                padding: 10px 20px;
-                font-size: 1em;
-            }
-
             .grid-btn {
                 padding: 8px 14px;
                 font-size: 0.85em;
             }
 
-            .how-to-play h3 {
-                font-size: 1.3em;
+            .modal-content {
+                padding: 20px;
             }
 
-            .instructions {
-                padding: 15px;
+            .modal-header h2 {
+                font-size: 1.5em;
             }
 
-            .instruction-item {
+            .modal-instruction-item {
                 font-size: 0.95em;
                 margin-bottom: 12px;
             }
@@ -469,7 +556,8 @@
             const [lastPosition, setLastPosition] = useState(null);
             const [highScore, setHighScore] = useState({ 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 });
             const [moveHistory, setMoveHistory] = useState([]);
-            const [mode, setMode] = useState('friendly'); // 'friendly' or 'challenging'
+            const [mode, setMode] = useState('friendly');
+            const [showModal, setShowModal] = useState(false);
 
             useEffect(() => {
                 initializeGrid();
@@ -541,7 +629,6 @@
                     setMoveHistory([{ grid: grid.map(r => [...r]), number: 1, position: null }]);
                     
                     // Check if there are any valid moves after first placement
-                    // IMPORTANT: Check against newGrid, not grid (which hasn't updated yet)
                     const validMoves = getValidMoves(row, col, newGrid);
                     if (validMoves.length === 0) {
                         setGameOver(true);
@@ -555,7 +642,6 @@
                     const newGrid = grid.map(r => [...r]);
                     newGrid[row][col] = currentNumber;
                     
-                    // Save state before making move
                     setMoveHistory([...moveHistory, { 
                         grid: grid.map(r => [...r]), 
                         number: currentNumber, 
@@ -568,15 +654,12 @@
                     const nextNumber = currentNumber + 1;
                     setCurrentNumber(nextNumber);
 
-                    // Check if game is won
                     if (nextNumber > gridSize * gridSize) {
                         setGameWon(true);
                         updateHighScore(gridSize * gridSize);
                         return;
                     }
 
-                    // Check if there are any valid moves left
-                    // IMPORTANT: Check against newGrid, not grid (which hasn't updated yet)
                     const validMoves = getValidMoves(row, col, newGrid);
                     if (validMoves.length === 0) {
                         setGameOver(true);
@@ -617,10 +700,6 @@
                 setGridSize(size);
             };
 
-            const toggleMode = () => {
-                setMode(mode === 'friendly' ? 'challenging' : 'friendly');
-            };
-
             const getMessage = () => {
                 if (gameWon) {
                     return { text: '🎉 Congratulations! You filled the entire grid!', type: 'success' };
@@ -650,19 +729,49 @@
                         <p className="tagline">Fill the grid using knight moves!</p>
                     </div>
 
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h2>How to play</h2>
+                                    <button className="close-button" onClick={() => setShowModal(false)}>×</button>
+                                </div>
+                                <div className="modal-instructions">
+                                    <div className="modal-instruction-item">
+                                        <strong>🎯 Objective:</strong> Fill the entire grid with numbers in sequence (1, 2, 3...) by moving like a knight in chess.
+                                    </div>
+                                    <div className="modal-instruction-item">
+                                        <strong>♞ Knight Move:</strong> Move in an L-shape - 2 squares in one direction, then 1 square perpendicular. Click any square to start with "1", then click valid squares to continue.
+                                    </div>
+                                    <div className="modal-instruction-item">
+                                        <strong>🎲 Grid Sizes:</strong> Start with 3×3 for practice, then try larger grids for a tougher challenge. 3×3 and 4×4 grids are mathematically impossible to complete, you'll always be left with at least one square. 5×5 and larger grids can be fully solved, but it's going to be challenging! Try different starting squares, aim for solving the grid and try to beat your highest score. Good luck!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="controls">
+                        <div className="help-button-container">
+                            <button className="help-button-main" onClick={() => setShowModal(true)}>
+                                ❓ How to play
+                            </button>
+                        </div>
+
                         <div className="mode-selector">
                             <button 
                                 className={`mode-btn ${mode === 'friendly' ? 'active' : ''}`}
                                 onClick={() => setMode('friendly')}
                             >
-                                😊 Friendly
+                                <div>😊 Friendly</div>
+                                <div className="mode-description">Valid moves highlighted</div>
                             </button>
                             <button 
                                 className={`mode-btn ${mode === 'challenging' ? 'active' : ''}`}
                                 onClick={() => setMode('challenging')}
                             >
-                                💪 Challenging
+                                <div>💪 Challenging</div>
+                                <div className="mode-description">No hints - test your skills!</div>
                             </button>
                         </div>
                         
@@ -729,27 +838,6 @@
                         <button className="btn btn-primary" onClick={resetGame}>
                             New Game
                         </button>
-                    </div>
-
-                    <div className="how-to-play">
-                        <h3>How to play</h3>
-                        <div className="instructions">
-                            <div className="instruction-item">
-                                <strong>🎯 Objective:</strong> Fill the entire grid with numbers in sequence (1, 2, 3...) by moving like a knight in chess.
-                            </div>
-                            <div className="instruction-item">
-                                <strong>♞ Knight Move:</strong> Move in an L-shape - 2 squares in one direction, then 1 square perpendicular. Click any square to start with "1", then click valid squares to continue.
-                            </div>
-                            <div className="instruction-item">
-                                <strong>😊 Friendly Mode:</strong> Valid moves are highlighted in green to help you learn the pattern.
-                            </div>
-                            <div className="instruction-item">
-                                <strong>💪 Challenging Mode:</strong> No hints - test your memory and strategy!
-                            </div>
-                            <div className="instruction-item">
-                                <strong>🎲 Grid Sizes:</strong> Start with 3×3 for practice, then try larger grids for a tougher challenge. 3×3 and 4×4 grids are mathematically impossible to complete, you'll always be left with at least one square. 5×5 and larger grids can be fully solved, but it's going to be challenging! Try different starting squares, aim for solving the grid and try to beat your highest score. Good luck!
-                            </div>
-                        </div>
                     </div>
                 </div>
             );
